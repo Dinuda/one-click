@@ -95,6 +95,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     email
                 });
             });
+
+            chrome.storage.sync.set({ email: email }, function () {
+                console.log('Settings saved:', {
+                    provider: providerName,
+                    email
+                });
+            });
         } else {
             formFeedback.textContent = 'Please fix the errors above and try again.';
             formFeedback.classList.remove('success');

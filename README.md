@@ -1,11 +1,38 @@
-# The Simplest Example of a Useful Chrome Browser Extension
+# create-svelte
 
-Get data from the user's active tab, using minimal permissions to ensure shorter review-and-publish cycles.
+Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
 
-## To test out this extension
+## Creating a project
 
-1. Clone this repository to your local machine.
-2. Visit `chrome://extensions` in your (Google Chrome) browser
-3. Toggle 'Developer mode' on
-4. Click 'Load Unpacked' and select the cloned directory (make sure it's unzipped if you downloaded it directly from this repo)
-5. Open a new tab and click the extension's icon to open its popup & see it in action
+If you're seeing this, you've probably already done this step. Congrats!
+
+```bash
+# create a new project in the current directory
+npm create svelte@latest
+
+# create a new project in my-app
+npm create svelte@latest my-app
+```
+
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+
+```bash
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```bash
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.

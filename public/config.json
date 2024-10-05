@@ -1,0 +1,21 @@
+[
+    {
+        "name": "Login",
+        "id": 1,
+        "actions": {
+            "detect": {
+                "endpoint": "",
+                "params": {},
+                "functionName": "detectLoginButton"
+            },
+            "login": {
+                "endpoint": "",
+                "params": {
+                    "username": "Enter your username",
+                    "password": "Enter your password"
+                },
+                "functionName": "loginToSite"
+            }
+        }
+    }
+]

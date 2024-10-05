@@ -1,55 +1,33 @@
 {
-  "manifest_version": 3,
-  "name": "Auto Login Extension",
-  "version": "1.0",
-  "permissions": [
-    "storage",
-    "activeTab",
-    "cookies",
-    "scripting",
-    "tabs"
-  ],
-  "background": {
-    "service_worker": "background.js"
-  },
-  "host_permissions": [
-    "https://accounts.google.com/*",
-    "https://www.facebook.com/*"
-  ],
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": {
-      "16": "assets/icon.svg",
-      "48": "assets/icon.svg",
-      "128": "assets/icon.svg"
-    }
-  },
-  "content_scripts": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "content.js"
-      ],
-      "css": [
-        "assets/tailwind.min.css",
-        "assets/font-awesome.min.css"
-      ]
-    }
-  ],
-  "commands": {
-    "trigger-login": {
-      "suggested_key": {
-        "default": "Ctrl+J",
-        "mac": "Command+J"
-      },
-      "description": "Trigger login process"
-    }
-  },
-  "icons": {
-    "16": "assets/icon.svg",
-    "48": "assets/icon.svg",
-    "128": "assets/icon.svg"
-  }
+    "manifest_version": 3,
+    "name": "Login Automation Extension",
+    "description": "Automatically detect and log into websites using Optimaxer web commands.",
+    "version": "1.0",
+    "permissions": [
+        "activeTab",
+        "scripting",
+        "storage"
+    ],
+    "icons": {
+        "16": "assets/icon.svg",
+        "48": "assets/icon.svg",
+        "128": "assets/icon.svg"
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": "assets/icon.svg"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content.js"
+            ]
+        }
+    ]
 }

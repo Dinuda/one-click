@@ -1,0 +1,17 @@
+{
+    "version": "1.0.0",
+    "data": [
+        {
+            "content": "detect",
+            "metadata": {
+                "name": "detect"
+            }
+        },
+        {
+            "content": "login",
+            "metadata": {
+                "name": "login"
+            }
+        }
+    ]
+}

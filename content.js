@@ -5,16 +5,6 @@ document.addEventListener("keydown", debounce((event) => {
     }
 }, 300)); // Debounce added with 300ms delay
 
-// Prevent any link from opening a new tab
-// document.addEventListener('click', function (event) {
-//     const target = event.target.closest('a');
-
-//     if (target && target.tagName.toLowerCase() === 'a') {
-//         event.preventDefault(); // Prevent the default link action
-//         console.log("Prevented a link from opening in a new tab/window.");
-//     }
-// });
-
 // Prevent window.open from opening new tabs/windows
 window.open = function () {
     console.log("window.open is disabled to prevent opening new tabs.");

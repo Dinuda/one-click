@@ -91,19 +91,35 @@ function checkLoginStatus(preference) {
 }
 
 function findBestLoginButton(preference, email) {
-    const elements = document.querySelectorAll("button, input[type='button'], input[type='submit'], div, a, span");
-
     const loginKeywords = [
         "login", "log in", "signin", "sign in", "sign-in", "continue",
         "register", "create account", "sign up", "signup"
     ];
 
     const socialLoginKeywords = {
-        google: ["google", "sign in with google", "continue with google", "google login"],
-        facebook: ["facebook", "sign in with facebook", "continue with facebook", "facebook login"],
+        google: ["google", "sign in with google", "continue with google", "google login", 'join with google'],
+        facebook: ["facebook", "sign in with facebook", "continue with facebook", "facebook login", 'join with facebook']
     };
 
     const chooseAccountKeywords = ["choose an account", "select an account", "select account", "choose account"];
+
+    const allKeywords = [...loginKeywords, ...chooseAccountKeywords];
+    if (preference && socialLoginKeywords[preference]) {
+        allKeywords.push(...socialLoginKeywords[preference]);
+    }
+
+    // Create a regex pattern from all keywords
+    const keywordPattern = new RegExp(allKeywords.join('|'), 'i');
+
+    // First, scan the entire document's text content
+    const docText = document.body.innerText.toLowerCase();
+    if (!keywordPattern.test(docText)) {
+        console.log("No relevant keywords found on the page.");
+        return { bestElement: null, secondBestElement: null };
+    }
+
+    // If keywords are found, then search for specific elements
+    const elements = document.querySelectorAll("button, input[type='button'], input[type='submit'], a, span");
 
     let bestElement = null;
     let secondBestElement = null;
@@ -124,65 +140,46 @@ function findBestLoginButton(preference, email) {
         const attributes = [text, ariaLabel, title, value, placeholder, name, id, className, identifier];
         const allText = attributes.join(' ');
 
+        // Only process elements that contain at least one keyword
+        if (!keywordPattern.test(allText)) {
+            return;
+        }
+
         let score = 0;
 
-        // Ignore elements with the 'hidden' class or explicitly hidden styles
+        // Ignore hidden elements
         if (className.includes('hidden') || window.getComputedStyle(element).display === 'none') {
-            score -= 100;  // Major penalty for hidden elements
+            return;
         }
 
-        // Social Login Preference
-        if (preference && socialLoginKeywords[preference]) {
-            socialLoginKeywords[preference].forEach(keyword => {
-                if (allText.includes(keyword)) score += 5;
-            });
-        }
-
-        // Standard Login Keywords
-        loginKeywords.forEach(keyword => {
-            if (allText.includes(keyword)) score += 40;  // Increase weight for direct login-related keywords
-        });
-
-        // Choose Account Keywords
-        chooseAccountKeywords.forEach(keyword => {
-            if (allText.includes(keyword)) score += 2;
+        // Score calculation
+        allKeywords.forEach(keyword => {
+            if (allText.includes(keyword)) {
+                score += keyword.length; // Longer, more specific keywords get higher scores
+            }
         });
 
         // Email Match for Identifying Users
         if (email === identifier) score += 100;
 
-        // Visibility & Display Heuristics
-        const style = window.getComputedStyle(element);
-        if (style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0') {
-            score += 2;  // Fully visible element
-        }
-
-        // Size Penalty (Favor elements larger than a minimum size but penalize very large ones)
+        // Size Heuristics (Favor smaller elements)
         const rect = element.getBoundingClientRect();
         const area = rect.width * rect.height;
-        if (area > 0 && area > 50 && area < 600) {  // Element with reasonable size (avoid too small)
-            score -= Math.log(area);  // Penalize large elements
+        if (area > 0 && area <= 5000) {
+            score += (5000 - area) / 100;
         } else {
-            score -= 50;  // Heavily penalize elements that are too small or have an area close to zero
+            score -= 50;
         }
-
-        // Penalize non-interactive divs/spans even if styled as buttons
-        // const tagName = element.tagName.toLowerCase();
-        // if (tagName === 'div' || tagName === 'span') {
-        //     if (!element.onclick) {
-        //         score -= 30;  // Heavily penalize non-interactive divs/spans
-        //     }
-        // }
 
         // Clickability Heuristics
         if (element.onclick || element.tagName.toLowerCase() === 'button' ||
             (element.tagName.toLowerCase() === 'input' && ['button', 'submit'].includes(element.type.toLowerCase()))) {
-            score += 10;  // Prefer buttons
+            score += 20;
         } else if (element.tagName.toLowerCase() === 'a') {
-            score += 5;  // Penalize links
+            score += 5;
         }
 
-        // Assigning Best and Second-Best Elements
+        // Update best and second-best elements
         if (score > bestScore) {
             secondBestElement = bestElement;
             secondBestScore = bestScore;
@@ -196,9 +193,6 @@ function findBestLoginButton(preference, email) {
 
     return { bestElement, secondBestElement };
 }
-
-
-
 
 function clickLoginButton(preference, email) {
     const { bestElement, secondBestElement } = findBestLoginButton(preference, email);

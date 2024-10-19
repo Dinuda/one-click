@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Auto Login Extension",
+  "name": "One click",
   "version": "1.0",
   "permissions": [
     "storage",
@@ -38,6 +38,7 @@
       ]
     }
   ],
+  "web_accessible_resources": ["icon.svg"],
   "commands": {
     "trigger-login": {
       "suggested_key": {
